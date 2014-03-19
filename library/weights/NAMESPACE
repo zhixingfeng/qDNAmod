@@ -1,0 +1,7 @@
+useDynLib(weights)
+
+export("wtd.hist", "wtd.chi.sq", "wtd.t.test", "wtd.cor", "nalevs", "dummify", "wpct", "starmaker", "stdz", "rd")
+export(wtd.cors)
+
+importFrom(gdata, drop.levels)
+importFrom(Hmisc, wtd.table, wtd.mean, wtd.var)

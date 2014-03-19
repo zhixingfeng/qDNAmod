@@ -1,0 +1,398 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+\documentclass[11pt]{article}
+%% Set my margins
+\setlength{\oddsidemargin}{0.0truein}
+\setlength{\evensidemargin}{0.0truein}
+\setlength{\textwidth}{6.5truein}
+\setlength{\topmargin}{0.0truein}
+\setlength{\textheight}{9.0truein}
+\setlength{\headsep}{0.0truein}
+\setlength{\headheight}{0.0truein}
+\setlength{\topskip}{0pt}
+%% End of margins
+
+%%\pagestyle{myheadings}
+%%\markboth{$Date$\hfil$Revision$}{\thepage}
+
+\usepackage[pdftex,
+bookmarks,
+bookmarksopen,
+pdfauthor={Bradley Efron, Brit B. Turnbull and Balasubramanian Narasimhan},
+pdftitle={locfdr Vignette}]
+{hyperref}
+
+
+\title{locfdr Vignette\\
+Complete Help Documentation\\ Including Usage Tips and Simulation Example}
+\author{Bradley Efron, Brit B. Turnbull and Balasubramanian Narasimhan\\
+  Department of Statistics\\
+  Stanford University\\ 
+  Stanford, CA 94305}
+
+\date{\today}
+
+\SweaveOpts{echo=TRUE, pdf=TRUE, eps=FALSE}
+
+\begin{document}
+%\VignetteIndexEntry{Local FDR}
+%\VignetteKeywords{FDR, local FDR}
+%\VignettePackage{locfdr}
+\maketitle
+
+This vignette includes locfdr's complete help documentation, including
+usage tips, which could not fit in the R help file.  It also
+demonstrates usage of locfdr through an example using the
+simulated data included in the package.
+
+\section{Description and Usage}
+
+locfdr computes local false discovery rates, following the definitions and
+  description in the references listed below.
+
+\begin{verbatim}
+locfdr(zz, bre=120, df=7, pct=0, pct0=1/4, nulltype=1, type=0, plot=1,
+        mult, mlests, main=" ", sw=0)
+\end{verbatim}
+
+\section{Arguments}
+
+\subsection{zz}
+  zz is a vector of summary statistics, one for each case under
+  consideration.  In a microarray experiment, there would be one
+  element of zz for each gene, perhaps a $t$-statistic comparing
+  gene expression levels under two different conditions.  The
+  calculations  assume a large number of cases, say
+  \texttt{length(zz)} exceeding 200.
+
+Results may be improved by transforming
+  zz so that its elements are theoretically distributed
+  as $N(0,1)$ under the null hypothesis.
+  For example, when using $t$-statistics, transform them by
+  \texttt{zz = qnorm(pt(t,df)).}  Recentering and rescaling zz may be
+  necessary if its central histogram looks very far removed from mean 0 and variance 1.
+
+  When using a permutation null
+  distribution with sample zperm, transform the original
+  statistics zorig by 
+  \texttt{zz = qnorm(ecdf(zperm)(zorig)).}
+  Such transformation is especially
+  important when the theoretical null option is invoked (see nulltype below).
+
+
+\subsection{bre}
+
+bre is the number of breaks in the discretization of the $z$-score axis,
+        or a vector of breakpoints fully describing the
+        discretization.  If \texttt{length(zz)} is small, such as when the
+        number of cases is less than about 1000, set bre to a number
+        less than the default of 120.
+
+\subsection{df}
+
+df is the degrees of freedom for fitting the estimated
+        density $f(z)$ (see type below). Larger values of df may be required if
+        $f(z)$ has sharp bends or other irregularities. A warning
+        is issued if the fitted curve does not adequately match the
+        histogram counts. It is a good idea to use the plot option to
+        view the histogram and fitted curve.
+
+\subsection{pct}
+
+pct is the excluded tail proportions of zz's when fitting
+           $f$. The default \texttt{pct=0} includes the full range of
+           zz's. pct can also be a 2-vector, describing the fitting range.
+
+\subsection{pct0}
+
+pct0 is the proportion of the zz distribution used in fitting the
+            null density $f_0$ by central matching.  If it is a 2-vector,
+            e.g. \texttt{pct0=c(0.25,0.60)}, the range \texttt{[pct0[1],
+            pct0[2]]} is used.  If a scalar, \texttt{[pct0, 1-pct0]} is used.
+
+\subsection{nulltype}
+
+nulltype is the type of null hypothesis assumed in estimating $f_0$,
+        for use in the fdr calculations.
+\begin{itemize}
+\item 0 is the
+        theoretical null $N(0,1)$, which assumes that zz
+        has been scaled to have a $N(0,1)$ distribution under
+        the null hypothesis.
+\item 1 (the default) is the empirical null
+        with parameters estimated by maximum likelihood.
+\item 2 is the empirical null
+        with parameters estimated by central matching (see
+        \cite{size}).
+\item 3 is a ``split normal'' version of 2, in
+        which $f_0(z)$ is allowed to have different
+        scales on the two sides of the maximum.
+\end{itemize}
+
+Unless sw is set to 2 or 3, the theoretical, maximum
+        likelihood, and central matching estimates all will be output in
+        the matrix fp0, and both the theoretical and the specified
+        nulltype will be used in the calculations output in mat, but
+        only the specified nulltype is used in the calculation of the
+        output fdr (local fdr estimates for every case).
+
+\subsection{type}
+type is the type of fitting used for $f$.
+\begin{itemize}
+\item 0 is a natural spline.
+\item 1 is a polynomial.
+\end{itemize}
+In either case, $f$ is fit with degrees of freedom df (so
+        total degrees of freedom including the intercept is $\mbox{df}+1$).
+
+\subsection{plot}
+
+plot specifies the plots desired.
+\begin{itemize}
+\item 0 gives no plots.
+\item 1 (the default) gives a single
+            plot showing the histogram of zz and fitted
+            mixture density $f$ (green solid curve) and null
+            subdensity $p_0f_0$ (blue dashed curve).
+            Colored histogram
+            bars indicate estimated non-null counts.  Yellow triangles
+            on the zz-axis indicate threshold values for $fdr(z) \leq
+            0.2$, if such cases exist.
+\item 2 also gives plot of fdr, and the right and
+            left tail area Fdr curves.
+\item 3 gives instead the $f_1$ cdf
+            of the estimated fdr curve, as in Figure 4 of \cite{size}.
+\item 4 gives all three plots.
+\end{itemize}
+
+We recommend setting plot to 1 or greater, to check the fit of
+              $p_0f_0$ to the histogram.  (If the fit is poor, try
+              a different
+              nulltype or a different value of the mlests argument.)
+
+\subsection{mult}
+
+mult is an optional scalar multiple (or vector of multiples) of the
+            sample size for calculation of the corresponding
+            hypothetical Efdr value(s).
+
+\subsection{mlests}
+
+mlests is an optional vector of initial values for $(\delta_0, \sigma_0)$ in
+  the maximum likelihood iteration.  In addition, these are used to
+  determine the interval over which the maximum likelihood estimation is
+performed.  If, for example, zz was transformed quantile-wise from F
+statistics, most of zz's elements corresponding to interesting features will
+be positive.  To shift the interval away from such elements,
+specify a negative initial value for $\delta_0$, the first element of
+mlests.  If the default results in a poor fit of $p_0f_0$ to the
+histogram in the first plot, try setting mlests to move the estimates
+toward the values suggested by the histogram.
+
+
+\subsection{main}
+main is the main heading for the histogram plot.
+
+\subsection{sw}
+sw determines the type of output desired.
+\begin{itemize}
+\item 2 gives a list
+          consisting of the last 5 values listed under Value below.
+\item 3 gives
+          the square matrix of dimension bre-1 representing the influence
+          function of $\log(fdr)$.  The
+          $(i,j)$ entry of the matrix is the derivative of
+          $\log(fdr)$ at the midpoint of bin $i$ with respect to the
+          count value of bin $j$.
+\item Any other value
+          of sw returns a list consisting of the first 7 (8 if mult is
+          supplied) values listed below.
+\end{itemize}
+
+\section{Value}
+
+\subsection{fdr}
+fdr is the estimated local false discovery rate for each case,
+        using the selected type and nulltype.
+
+\subsection{fp0}
+fp0 is a matrix containing the estimated parameters delta (mean of
+$f_0$), sigma (standard deviation of $f_0$), and p0 (proportion of
+tests that are null), along with their estimated standard errors.  If \texttt{nulltype<3}, fp0 is a $5\times 3$ matrix,
+        with columns representing delta, sigma, and p0 and rows
+        representing nulltypes and estimate vs. standard
+        error.  If \texttt{nulltype==3}, the second column corresponds
+        to the estimate of sigma for the left side of $f_0$, and a
+        fourth column corresponds to the sigma estimate for the right.
+
+\subsection{Efdr}
+Efdr is the expected local false discovery rate for the non-null cases,
+        a measure of the experiment's power as described in Section 3
+        of \cite{size}. Large values of Efdr, say \texttt{Efdr>0.4},
+        indicate low power. Overall Efdr and right and left values are
+        given, both for the specified nulltype and for nulltype 0.  (If
+        \texttt{nulltype==0}, values are given for nulltypes 1 and 0.)
+
+\subsection{cdf1}
+cdf1 is a $99\times 2$ matrix giving the estimated cdf of fdr under the
+        non-null distribution $f_1$. Large values of the cdf for small fdr
+        values indicate good power.  See Section 3 of \cite{size}.
+        Set plot to 3 or 4 to see the plot of cdf1.
+
+\subsection{mat}
+
+mat is a $(\mbox{bre}-1)\times 11$ matrix, convenient for
+        comparisons and plotting.  Each row corresponds to a
+bin of the zz histogram, and the columns contain the following:
+\begin{enumerate}
+\item x: the midpoint of the bin.
+\item fdr: the estimated local false discovery rate at $x$, calculated based on
+  the specified type and nulltype (using \texttt{nulltype=1} if
+  \texttt{nulltype=0} is specified).
+\item Fdrleft: the left tail false discovery rate at $x$.
+\item Fdrright: the right tail false discovery rate at $x$.
+\item f: the mixture density estimate at $x$, calculated based on the
+  specified type, df, and pct, scaled to sum to \texttt{length(zz)}.
+\item f0: the null density estimate at $x$, calculated based on the
+  specified nulltype (using \texttt{nulltype=1} if \texttt{nulltype=0}
+  is specified) and pct0 and scaled to sum to \texttt{length(zz)}.
+\item f0theo: the null density estimate at $x$, calculated using the
+  theoretical null $N(0,1)$ and scaled to sum to \texttt{length(zz)}.
+\item fdrtheo: the local false discovery rate at $x$, calculated based on
+  the specified type and \texttt{nulltype=0}.
+\item counts: the number of elements of zz in the bin.
+\item lfdrse: the delta-method estimate of the standard error of the
+  log of the local false discovery rate for the specified nulltype.  
+  This estimate assumes independence of the
+        zz values and should usually be considered as a lower bound on
+        the true standard errors. See \cite{size}.
+\item p1f1: the estimated subdensity of the zz elements that come from
+  non-null tests.  p1f1 is scaled to sum to approximately (1-p0) times
+  \texttt{length(z)}, i.e. the estimated number of non-null tests.
+\end{enumerate}
+
+\subsection{z.2}
+
+z.2 is the interval along the zz-axis outside of which $fdr(z)<0.2$,
+the locations of the yellow triangles in the histogram plot.  If no
+elements of zz on the left or right satisfy the criterion, the
+corresponding element of z.2 is NA, and the corresponding triangle
+does not appear.
+
+\subsection{call}
+
+call is the function call.
+
+\subsection{mult}
+
+If the argument mult was supplied, the value mult is the vector of the
+ratios of the hypothetical Efdr for the supplied multiples of the
+sample size to the Efdr for the actual sample size.
+
+\subsection{pds}
+
+pds is the vector of estimates of p0, delta, and sigma.
+
+\subsection{x}
+
+x is the vector of bin midpoints.
+
+\subsection{f}
+
+f is the vector of estimated values of $f(x)$ at the bin midpoints.
+
+\subsection{pds.}
+
+pds. is the derivative of the estimates of p0, delta, and sigma with
+            respect to the bin counts.
+
+\subsection{stdev}
+stdev is the vector of delta-method estimates of the standard deviations of
+             the p0, delta, and sigma estimates.
+
+
+\section{Simulation Example}
+
+This simulation example involves 2000 ``genes'', each of which has
+yielded a test statistic $z_i$, with $z_i \sim N(\mu_i, 1)$,
+independently for $i=1,2,\ldots,2000$.
+
+Here $\mu_i$ is the ``true score'' of gene $i$, which we observe only
+noisily. 1800 (90\%) of the $\mu_i$ values are zero; the remaining 200
+(10\%) are from a $N(3,1)$ distribution. The data are contained in the
+dataset \texttt{lfdrsim}, where the $z_i$ are the column \texttt{zex}.  
+
+<<Preliminaries>>=
+library(locfdr)
+data(lfdrsim)
+zex <- lfdrsim[, 2]
+@ 
+
+If we are confident that the null $z_i$'s are distributed as $N(0,1)$,
+we run \texttt{locfdr} with \texttt{nulltype=0}.  Otherwise, we use
+the default \texttt{nulltype=1}, which uses empirical estimates of the
+null density parameters.
+
+<<Compute-local-fdr, fig=TRUE, echo=TRUE>>=
+w <- locfdr(zex)
+@ 
+
+In the figure, the green solid line is the spline-based estimate of
+the mixture density $f$.  The blue dashed line is the null
+subdensity $p_0f_0$, estimated by default by maximum likelihood
+(nulltype=1).  Whichever nulltype is specified, \texttt{locfdr}
+returns a matrix \texttt{fp0} containing parameters of all three
+nulltypes and corresponding estimates of the proportion $p_0$ of cases
+that are null, along with standard errors.  In this example, the null
+distribution is $N(0,1)$, and both the MLE and central matching
+estimates come close to this.
+
+
+<<Show fp0>>=
+w$fp0
+@ 
+
+The output mat contains estimates of the local false discovery rates
+and other functions for each bin midpoint $x$.
+
+<<Show mat>>=
+w$mat[1:5,]
+@ 
+
+The output fdr contains the local false discovery rate estimate
+for each $z_i$.  One might use this vector to create a list of
+Interesting cases.
+
+<<list interesting cases>>=
+which(w$fdr<.2)
+@ 
+
+Here $0.2$ is a rule-of-thumb cut-off.  In the simulated data, the
+first 200 cases have nonzero $\mu_i$.  So we can find the observed tail
+false discovery proportion.
+
+<<tail FDP>>=
+sum(which(w$fdr<.2)>200)/sum(w$fdr<.2)
+@ 
+
+The estimated tail FDR can be found from the \texttt{mat} output.
+
+<<tail FDR>>=
+w$mat[which(w$mat[,"fdr"]<.2)[1],"Fdrright"]
+@ 
+
+The tail FDR is the mean local fdr over the entire tail and is
+therefore smaller than the local fdr cutoff.
+
+\begin{thebibliography}{99}
+\bibitem{choice} Efron, B. (2004) ``Large-scale simultaneous hypothesis
+  testing: the choice of a null hypothesis,'' \textit{JASA}, \textbf{99},
+  pp. 96--104.
+\bibitem{locfdr} Efron, B. (2005) ``Local False Discovery Rates,''\\
+\texttt{http://www-stat.stanford.edu/}$\tilde{\mbox{\,\,\,\,\,}}$\texttt{brad/papers/False.pdf}
+\bibitem{size} Efron, B. (2006) ``Size, Power, and False Discovery Rates,''\\
+\texttt{http://www-stat.stanford.edu/}$\tilde{\mbox{\,\,\,\,\,}}$\texttt{brad/papers/Size.pdf}
+\bibitem{cor} Efron, B. (2006) ``Correlation and Large-Scale Simultaneous
+  Significance Testing,'' \textit{JASA}, \textbf{102}, pp. 93--103.
+\end{thebibliography}
+
+\end{document}
