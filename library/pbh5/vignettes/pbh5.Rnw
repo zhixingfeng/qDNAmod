@@ -1,0 +1,254 @@
+%\VignetteIndexEntry{The pbh5 user guide}
+%\VignetteDepends{pbh5}
+%\VignettePackage{pbh5}
+\documentclass[11pt]{article}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage[authoryear,round]{natbib}
+\bibliographystyle{plainnat}
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rcode}[1]{{\textit{#1}}}
+
+<<echo=FALSE>>=
+options(width=50)
+@ 
+
+\author{James Bullard\footnote{jbullard@pacificbiosciences.com}}
+\begin{document}
+\title{The \Rpackage{pbh5} User Guide}
+\maketitle
+\tableofcontents
+
+\section{Introduction}
+The Pacific Biosciences RS platform produces a variety of HDF5 files
+at various stages of the processing pipeline. The \Rpackage{pbh5}
+package provides APIs to these files to facilitate more comprehensive
+analyses than might be possible with traditional files, such as FASTA,
+FASTQ, SAM, or BAM. For example, single molecule real time sequencing
+produces valuable kinetic information during the course of sequencing
+which can be used to interrogate other features of DNA, such as
+epigentics.
+
+The \Rpackage{pbh5} package depends on the \Rpackage{h5r} package
+which is available on CRAN. The \Rpackage{h5r} package provides a
+low-level read/write interface to HDF5 files and is not specific to
+HDF5 files produced by Pacific Biosciences.
+
+This vignette provides a high-level overview of the \Rpackage{pbh5}
+package. In order to learn more about the various HDF5 file formats
+provided by Pacific Biosciences, please refer to:
+\url{http://pacificbiosciences.github.io/FileFormats/}. Additionally,
+to learn more about SMRT Sequencing in general, please see:
+\url{http://pacificbiosciences.github.io/DevNet/}.
+
+\section{Classes}
+The \Rpackage{pbh5} is arranged around the various file types produced
+by Pacific Biosciences. These files are represented in R by S4 classes
+with similar names. These classes provide a read-only interfaces to
+the various files and should be preferred to direct access to the data
+through low-level \Rpackage{h5r} calls.
+\begin{center}
+    \begin{tabular}{ | l | l | l | p{5cm} |}
+    \hline
+    File & Extension & Constructor & Summary \\ \hline
+    Compare H5 & cmp.h5 & \Rcode{PacBioCmpH5} & Results from the
+    alignment of reads to reference sequences; contains alignment,
+    quality, and kinetic information on ``alignments''. \\ \hline
+    Base H5 & bas.h5 & \Rcode{PacBioBasH5} & Raw basecalls produced
+    from a single chip, i.e., one base file per movie. \\ \hline
+    Pulse H5 & pls.h5 & \Rcode{PacBioPlsH5} & A superset of a Base H5
+    file with more signal processing information retained. These files
+    are not produced by default. \\ \hline
+    Trace H5 & trc.h5 & \Rcode{PacBioTrcH5} & The raw traces; this
+    file is not available by default as it is massive. \\ \hline
+    \end{tabular}
+\end{center}
+Users of PacBio data are mostly expected to be interested in
+``cmp.h5'' and ``bas.h5'' files as they are produced by default and
+contain the salient information on alignments and basecalls
+respectively.
+
+\flushleft \textbf{NOTE:} As of the 2.0 software release, certain file
+types, e.g., bas.h5 files are split into parts. The parts are labeled
+as ``[1-3].bax.h5''. Users need not worry about this and can continue
+to open the bas.h5 file directly. However, the ``bax'' files are fully
+valid bas.h5 files and therefore they can be opened independently
+using the appropriate constructor. The bas.h5 files packaged with
+\Rpackage{pbh5} are of the older type and therefore all of the
+basecall information is stored directly in the bas.h5 file.
+
+\section{Compare H5 Files}
+The compare H5 Files, or cmp.h5 files are produced by aligning PacBio
+reads to a reference FASTA file. This file is analogous to a SAM/BAM
+file as it contains alignment information of reads to reference
+sequences. As mentioned previously, the cmp.h5 file contains much more
+information than a corresponding SAM file. Namely, single-molecule
+sequencing generates both a richer set of quality values than a
+single-base error QV as well as kinetics information.
+
+The \Rpackage{pbh5} package provides an example cmp.h5 file which was
+produced from two example bas.h5 files. These files have been
+subsampled in order to keep the package size small. Typically, these
+files would be {\em much} larger.
+<<>>=
+library(pbh5)
+cmpH5 <- PacBioCmpH5(system.file("h5_files", "aligned_reads.cmp.h5", 
+                                 package = "pbh5"))
+summary(cmpH5)
+@ 
+The high-level summary describes the contents of the particular
+file. Important things to notice are: 
+\begin{itemize}
+\item N Alignments = The number of alignments in the file.
+\item N RefSeqs = The number of reference sequences, i.e., FASTA
+  entries that were seen during alignment.
+\end{itemize}
+At the core of the cmp.h5 file is an ``AlignmentIndex'' which
+describes alignments and their metadata.
+<<>>=
+head(alnIndex(cmpH5), 3)
+@ 
+Generally, the user will not access these datastructures directly, but
+rather interact with them using various methods of the class, for
+instance, if the user is interested in the locations of the
+alignments on the reference sequence, they would do the following.
+<<fig=TRUE>>=
+starts <- getTemplateStart(cmpH5)
+hist(starts, breaks = 50)
+@ 
+A large number of methods are available and the package help should be
+consulted for more information. In addition to member access, methods
+are available for relating data, such as alignment information and
+kinetic information. For instance,
+<<>>=
+head(getAlignmentsWithFeatures(cmpH5, idx = 1, fxs = getIPD, 
+                               collapse = TRUE))
+@
+A couple of important aspects of the call above are the following:
+almost all methods on classes of PacBioCmpH5 take an optional
+\Rcode{idx} argument which defaults to \Rcode{1:nrow(cmpH5)}, i.e.,
+all alignments in the file. In the previous call, we have selected
+only the first alignment. Additionally, the \Rcode{fxs} argument
+specifies and optional function argument for the data to return. The
+signature of the methods for \Rcode{fxs} needs to be of the form
+\Rcode{(cmpH5, idx)} and the return value must be a list of values.
+<<>>=
+tail(getAlignmentsWithFeatures(cmpH5, fxs = list(ipd = getIPD, 
+                                        pw = getPulseWidth),
+                               collapse = TRUE))
+@ 
+
+\section{Base H5 Files}
+As mentioned above, the other ``core'' file produced from a sequencing
+run is the ``bas.h5'' file. The ``bas.h5'' file contains the raw
+basecalls obtained during a sequencing run. In addition to the
+basecalls, quality values, kinetics information, and a great deal of
+meta data concerning the sequencing run is available in the bas.h5
+file.
+<<>>=
+basFiles <- list.files(system.file("h5_files", package = "pbh5"),
+                       pattern = "bas", full.names = TRUE)
+basH5 <- PacBioBasH5(basFiles[[1]])
+getAcqParams(basH5)
+@
+The bas.h5 file can be used to generate spatial representations of the
+chip for use in QC applications.
+<<fig=TRUE>>=
+require(ggplot2)
+xyz <- data.frame(getHoleXY(basH5), 
+                  readScore = getReadScore(basH5))
+show(ggplot(xyz, aes(X1, X2, color = readScore)) + 
+     geom_point())
+@ 
+Unfortunately, due to the size of the example chip in the package, the
+example spatial plot does not look like a real chip. A real chip, will
+look something more like figure XX
+\begin{figure}
+  \centering
+  \includegraphics{ex-chip.png}
+  \caption{
+    An spatial plot of an entire chip.
+  }
+\end{figure}
+
+\section{Connecting the Two}
+Commonly, we would like to relate low-level metrics from a sequencing
+run to more downstream aspects of that run such as read length and
+accuracy. To do that, we need to ``join'' a cmp.h5 file and a bas.h5
+file. The main complexity behind executing such a join is that a
+cmp.h5 file is produced by aligning one or more bas.h5
+files. Therefore, one must provide a cmp.h5 file and the list of
+bas.h5 files that produced the cmp.h5 file.
+<<>>=
+basFiles <- list.files(system.file("h5_files", package = "pbh5"),
+                       pattern = "bas", full.names = TRUE)
+basH5s <- lapply(basFiles, PacBioBasH5)
+names(basH5s) <- sapply(basH5s, getMovieName)
+cmpH5 <- PacBioCmpH5(system.file("h5_files", "aligned_reads.cmp.h5", 
+                                 package = "pbh5"))
+head(associateZMWMetric(cmpH5, basH5s, zmwMetric = getSNR))
+@ 
+The method, \Rfunction{associateZMWMetric}, relates ZMW metrics
+(statistics over the ZMW) to alignments. In the common case, where a
+ZMW is represented by more than one alignment, values are duplicated.
+
+In addition to ZMW-level statistics, base-level statistics can also be
+associated to alignments. In most cases, these base-level statistics
+have already been mapped into the cmp.h5 file. For instance, the IPD
+values for a particular trace have typically been written into the file:
+<<>>=
+length(getIPD(cmpH5, idx = 1)[[1]])
+@
+However, the IPD values produced by the previous call correspond only
+to the portion of the trace which was aligned. If we want to get all
+IPD values or basecalls from a trace, irrespective of whether or not
+that trace has alignment data, we can do the following:
+<<fig=TRUE>>=
+## IPD in bas.h5 has a different name and produces values in "frames" 
+## as opposed to in seconds.
+pbf <- getPreBaseFrames(basH5s[[getMovieName(cmpH5, idx = 1)]],
+                        getHoleNumbers(cmpH5, idx = 1))[[1]]
+
+plot(density(pbf), xlim = c(0, 500))
+lines(density(pbf[getReadStart(cmpH5, 1):getReadEnd(cmpH5, 1)]), 
+      col = 'blue')
+lines(density(pbf[getReadEnd(cmpH5, 1):length(pbf)]), col = 'red')
+legend('topright', c('all', 'in', 'out'), 
+       fill = c('black', 'blue', 'red'))
+@ 
+As we can see, the IPD values for bases within the aligned portion of
+the trace are much more indicative of normal enzymatic activity. To
+perform such an analysis over an entire cmp.h5 file, we can use the
+\Rfunction{doWithPlsAndCmp} function. This function is a
+generalization of the \Rfunction{associateZMWMetric} function (indeed,
+the latter is implemented using the former).
+<<fig=TRUE>>=
+## the idx passed to the anonymous function are 
+## the indices corresponding to the holes from "bas"
+pbf <- doWithPlsAndCmp(cmpH5, basH5s, function(cmp, bas, idx) {
+  getPreBaseFrames(bas, getHoleNumbers(cmp, idx))
+}, SIMPLIFY = TRUE)
+
+plot(x <- mapply(pbf, getReadStart(cmpH5), getReadEnd(cmpH5), 
+                 FUN = function(p, s, e) {
+                   mean(p[s:e], na.rm = TRUE)
+                 }), 
+     y <- sapply(getIPD(cmpH5), mean, na.rm = TRUE))
+
+## 75 frames a second. 
+abline(0, 1/75)
+@ 
+
+\section{Conclusions}
+The \Rpackage{pbh5} package attempts to soften the pain of new file
+formats. By providing high-level functionality, the \Rpackage{pbh5}
+package attempts to aid users in accessing the novel datatypes
+available in the PacBio HDF5 files. 
+
+\end{document}

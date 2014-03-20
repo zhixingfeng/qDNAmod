@@ -1,0 +1,16 @@
+Package: pbh5
+Type: Package
+Title: Interface to Pacific Biosciences HDF5 Files
+Version: 1.1
+Date: 2010-01-28
+Author: James Bullard
+Maintainer: James Bullard <jbullard@pacificbiosciences.com>
+Depends: h5r, methods
+Imports: utils, methods
+Suggests: IRanges
+Description: Provides an interface to Pacific Biosciences HDF5 files. 
+	     The files currently supported include (In approximate
+	     order of support): 
+	     cmp.h5, bas.h5, pls.h5, trc.h5, aln.h5.
+License: file LICENSE
+Collate: pacBioIO.R cmpH5Utils.R plsH5Utils.R trcH5Utils.R
