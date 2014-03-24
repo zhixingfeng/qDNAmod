@@ -17,6 +17,9 @@ cat('outdir is: ', out.dir, '\n')
 cat('reagent is: ', reagent, '\n')
 cat('mapQVthreshold is: ', mapQV.cutoff, '\n')
 
-loadCmpH5toGenomeF(cmpH5.file, out.dir, reagent=reagent, mapQV.cutoff=mapQV.cutoff)
-
+if (file.exists(cmpH5.file)){
+	loadCmpH5toGenomeF(cmpH5.file, out.dir, reagent=reagent, mapQV.cutoff=mapQV.cutoff)
+}else{
+	stop(cmpH5.file,' does not exist')
+}
 
