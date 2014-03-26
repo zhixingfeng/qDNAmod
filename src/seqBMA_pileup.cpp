@@ -13,8 +13,8 @@ int main(int argc, char** argv)
 		
 		UnlabeledValueArg<string> cmpH5fileArg("cmpH5file","aligned data in cmpH5 format",true,"","cmpH5file");
 		UnlabeledValueArg<string> outdirArg("outdir","output directory",true,"","outdir");
-		ValueArg<double> mapQVthresholdArg("m","mapQVthreshold","minimal mapQV",false,255,"mapQVthreshold");
-		ValueArg<string> chemistryArg("r","reagent", "chemistry used for SMRT sequencing, candidates are: \"C2\"", false, "C2", "reagent");
+		ValueArg<double> mapQVthresholdArg("m","mapQVthreshold","minimal mapQV, default is 255",false,255,"mapQVthreshold");
+		ValueArg<string> chemistryArg("r","reagent", "chemistry used for SMRT sequencing, candidates are: \"C2\", default is \"C2\"", false, "C2", "reagent");
         	
 		cmd.add(cmpH5fileArg);
 		cmd.add(outdirArg);

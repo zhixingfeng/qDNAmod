@@ -40,5 +40,12 @@ load(paste(prior.file,'/f1.Rdata',sep=''))
 
 rl.detect <- detectModPropEB(genomeF.native, genomeF.wga, f1$x, f1$y, 50)
 
+if (!file.exists(out.dir))
+	dir.create(out.dir,recursive=TRUE)
+
 save(rl.detect, file=paste(out.dir,'/detect.Rdata',sep=''))
+
+
+
+
 

@@ -11,8 +11,8 @@ int main(int argc, char** argv)
 		// parse command line
 		CmdLine cmd("", ' ', "0.1");
 		
-		UnlabeledValueArg<string> nativefileArg("nativefile","native pileup data directory",true,"","native pileup file");
-		UnlabeledValueArg<string> wgafileArg("wgafile","WGA pileup data directory",true,"","WGA pileup file");
+		UnlabeledValueArg<string> nativefileArg("nativefile","native pileup data directory",true,"","native pileup dir");
+		UnlabeledValueArg<string> wgafileArg("wgafile","WGA pileup data directory",true,"","WGA pileup dir");
 		UnlabeledValueArg<string> outdirArg("outdir","output directory",true,"","outdir");
         		
 		cmd.add(nativefileArg);

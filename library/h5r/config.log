@@ -127,7 +127,7 @@ configure:2521: $? = 0
 configure:2544: result: none needed
 configure:2616: checking for library containing inflate
 configure:2657: gcc -o conftest -g -O2       conftest.c -lm >&5
-/tmp/ccsmghVF.o: In function `main':
+/tmp/ccYnSJjq.o: In function `main':
 /hpc/users/xfengz02/GitHub/seqBMA/library/h5r/conftest.c:19: undefined reference to `inflate'
 collect2: ld returned 1 exit status
 configure:2663: $? = 1
@@ -159,7 +159,7 @@ configure:2663: $? = 0
 configure:2691: result: -lz
 configure:2701: checking for library containing H5open
 configure:2742: gcc -o conftest -g -O2       conftest.c -lz -lm >&5
-/tmp/cceaG8QV.o: In function `main':
+/tmp/ccOibEJF.o: In function `main':
 /hpc/users/xfengz02/GitHub/seqBMA/library/h5r/conftest.c:19: undefined reference to `H5open'
 collect2: ld returned 1 exit status
 configure:2748: $? = 1
