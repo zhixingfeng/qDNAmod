@@ -6,10 +6,18 @@ System
 ======
 Linux
 
+
+Dependencies
+============
+1. R from http://www.r-project.org/
+(Add directory containing binary file 'Rscript' to your enviroment variable PATH)
+
+2. HDF5 from http://www.hdfgroup.org/HDF5/release/obtainsrc.html. 
+(Specify enviroment varible HDF5_HOME as the directory of installed HDF5)
+
 Installation
 ============
-Install R and HDF5 library first.
-unzip the downloaded file, enter the directory and type ./install.sh 
+Unzip the downloaded file, enter the directory and type ./install.sh 
 
 
 License
