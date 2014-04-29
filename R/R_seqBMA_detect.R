@@ -41,11 +41,11 @@ rm(genomeF);gc()
 load(paste(prior.file,'/f1.Rdata',sep=''))
 
 if (n.iter >= 2){
-	detect.iter <- detectModPropEB.iter(genomeF.native, genomeF.wga, f1$x, f1$y, is_f1_var=FALSE, 100, is.EM=FALSE, 0.005, n.iter)
+	detect.iter <- detectModPropEB.iter(genomeF.native, genomeF.wga, f1$x, f1$y, is_f1_var=FALSE, 50, is.EM=FALSE, 0.005, n.iter)
 	f1$x <- detect.iter$f1.x
 	f1$y <- detect.iter$f1.y
 }
-rl.detect <- detectModPropEB(genomeF.native, genomeF.wga, f1$x, f1$y, is_f1_var=TRUE, 100, is.EM=FALSE)
+rl.detect <- detectModPropEB(genomeF.native, genomeF.wga, f1$x, f1$y, is_f1_var=TRUE, 50, is.EM=FALSE)
 
 if (!file.exists(out.dir))
 	dir.create(out.dir,recursive=TRUE)
