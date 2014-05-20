@@ -31,12 +31,15 @@ PATH: /hpc/users/xfengz02/local/mysql/mysql/bin
 PATH: /hpc/users/xfengz02/local/mysql/mysql/scripts
 PATH: /hpc/users/xfengz02/SXSB/tools/MISO/bin
 PATH: /hpc/users/xfengz02/SXSB/bin
+PATH: /hpc/users/xfengz02/tool/FastQC
 PATH: /hpc/users/xfengz02/GitHub/seqBMA/bin
 PATH: /hpc/users/xfengz02/local/MoSDi/bin
 PATH: /hpc/users/xfengz02/local/meme/bin
 PATH: /hpc/users/xfengz02/local/hdf5/bin
 PATH: /hpc/users/xfengz02/tool/blasr-master/alignment/bin
 PATH: /hpc/packages/minerva-common/bowtie/1.0.1/src/bowtie-1.0.1
+PATH: /hpc/packages/minerva-manda/tophat/2.0.6/bin
+PATH: /hpc/packages/minerva-manda/python/2.7.2/bin
 PATH: /hpc/packages/minerva-manda/cufflinks/2.1.1/bin
 PATH: /hpc/packages/minerva-common/python/2.7.3/bin
 PATH: /hpc/packages/minerva-common/samtools/0.1.18/bin
@@ -45,14 +48,15 @@ PATH: /hpc/packages/minerva-common/R/3.0.3/lib64/R/bin
 PATH: /hpc/packages/minerva-manda/netcdf/4.3.0/bin
 PATH: /hpc/packages/minerva-manda/geos/3.4.2/bin
 PATH: /hpc/packages/minerva-manda/gsl/1.15/bin
-PATH: /hpc/packages/minerva-manda/intel/parallel-s-xe-2011-sp1-u2/vtune_amplifier_xe_2011/bin64
-PATH: /hpc/packages/minerva-manda/intel/parallel-s-xe-2011-sp1-u2/composer_xe_2011_sp1.9.293/bin/intel64
-PATH: /hpc/packages/minerva-manda/intel/parallel-s-xe-2011-sp1-u2/composer_xe_2011_sp1.9.293/mpirt/bin/intel64
+PATH: /hpc/packages/minerva-common/intel/parallel-s-xe-2013-sp1-u1/vtune_amplifier_xe_2013/bin64
+PATH: /hpc/packages/minerva-common/intel/parallel-s-xe-2013-sp1-u1/composer_xe_2013_sp1.1.106/bin/intel64
 PATH: /hpc/packages/minerva-common/gcc/4.8.2/bin
 PATH: /usr/lib64/qt-3.3/bin
 PATH: /usr/NX/bin
 PATH: /opt/moab/bin
-PATH: /opt/mam/bin
+PATH: /hpc/lsf/9.1/linux2.6-glibc2.3-x86_64/etc
+PATH: /hpc/lsf/9.1/linux2.6-glibc2.3-x86_64/bin
+PATH: /opt/gold/bin
 PATH: /usr/local/bin
 PATH: /bin
 PATH: /usr/bin
@@ -60,6 +64,7 @@ PATH: /usr/local/sbin
 PATH: /usr/sbin
 PATH: /sbin
 PATH: /opt/bin
+PATH: /hpc/packages/minerva-common/intel/parallel-s-xe-2013-sp1-u1/composer_xe_2013_sp1.1.106/mpirt/bin/intel64
 PATH: /hpc/users/xfengz02/bin
 
 
@@ -124,8 +129,8 @@ configure:2521: $? = 0
 configure:2544: result: none needed
 configure:2616: checking for library containing inflate
 configure:2657: gcc -o conftest -g -O2       conftest.c -lm >&5
-/tmp/ccrnRSxU.o: In function `main':
-/hpc/users/xfengz02/GitHub/seqBMA/library/h5r/conftest.c:19: undefined reference to `inflate'
+/tmp/ccaWCXKp.o: In function `main':
+/hpc/users/xfengz02/GitHub/qDNAmod/library/h5r/conftest.c:19: undefined reference to `inflate'
 collect2: error: ld returned 1 exit status
 configure:2663: $? = 1
 configure: failed program was:
@@ -156,8 +161,8 @@ configure:2663: $? = 0
 configure:2691: result: -lz
 configure:2701: checking for library containing H5open
 configure:2742: gcc -o conftest -g -O2       conftest.c -lz -lm >&5
-/tmp/ccWDqqB9.o: In function `main':
-/hpc/users/xfengz02/GitHub/seqBMA/library/h5r/conftest.c:19: undefined reference to `H5open'
+/tmp/cc5vo0OK.o: In function `main':
+/hpc/users/xfengz02/GitHub/qDNAmod/library/h5r/conftest.c:19: undefined reference to `H5open'
 collect2: error: ld returned 1 exit status
 configure:2748: $? = 1
 configure: failed program was:
