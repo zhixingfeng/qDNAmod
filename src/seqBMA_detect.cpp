@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 		// get home path of seqBMA
 		string homepath = getHomePath();
 		if (homepath==""){
-			fprintf(stderr, "Error: can not find SEQBWAHOME\n");
+			fprintf(stderr, "Error: can not find SEQBMAHOME\n");
 			return 1;
 		}
 		
