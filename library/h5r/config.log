@@ -27,6 +27,8 @@ uname -v = #32~precise1-Ubuntu SMP Thu Feb 20 17:52:10 UTC 2014
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
+PATH: /home/zxfeng/tools/bwa-0.7.9a
+PATH: /home/zxfeng/tools/seqtk
 PATH: /home/zxfeng/local/hdf5/bin
 PATH: /home/zxfeng/bin
 PATH: /home/zxfeng/tools/blasr/alignment/bin
@@ -101,7 +103,7 @@ configure:2521: $? = 0
 configure:2544: result: none needed
 configure:2616: checking for library containing inflate
 configure:2657: gcc -o conftest -g -O2       conftest.c -lm >&5
-/tmp/ccxRD38Y.o: In function `main':
+/tmp/ccpes9Nw.o: In function `main':
 /home/zxfeng/GitHub/qDNAmod/library/h5r/conftest.c:19: undefined reference to `inflate'
 collect2: ld returned 1 exit status
 configure:2663: $? = 1
@@ -133,7 +135,7 @@ configure:2663: $? = 0
 configure:2691: result: -lz
 configure:2701: checking for library containing H5open
 configure:2742: gcc -o conftest -g -O2       conftest.c -lz -lm >&5
-/tmp/ccGxS453.o: In function `main':
+/tmp/ccWRWarC.o: In function `main':
 /home/zxfeng/GitHub/qDNAmod/library/h5r/conftest.c:19: undefined reference to `H5open'
 collect2: ld returned 1 exit status
 configure:2748: $? = 1

@@ -4,7 +4,7 @@ using namespace std;
 string getHomePath()
 {
 	char *pPath;
-  	pPath = getenv ("SEQBMAHOME");
+  	pPath = getenv ("QDNAMODHOME");
   	if (pPath!=NULL)
 		return pPath;
 	else 
