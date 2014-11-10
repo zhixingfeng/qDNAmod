@@ -4,15 +4,15 @@ INCLUDES= -I../include -I../library/seqPatch/src/
 
 all: pileup prior detect
 
-pileup: seqBMA_pileup.cpp 
-	$(CC) $(INCLUDES) -o ../bin/seqBMA_pileup seqBMA_pileup.cpp
+pileup: qDNAmod_pileup.cpp 
+	$(CC) $(INCLUDES) -o ../bin/qDNAmod_pileup qDNAmod_pileup.cpp
 
-prior: seqBMA_prior.cpp
-	$(CC) $(INCLUDES) -o ../bin/seqBMA_prior seqBMA_prior.cpp
+prior: qDNAmod_prior.cpp
+	$(CC) $(INCLUDES) -o ../bin/qDNAmod_prior qDNAmod_prior.cpp
 
-detect: seqBMA_detect.cpp
-	$(CC) $(INCLUDES) -o ../bin/seqBMA_detect seqBMA_detect.cpp
+detect: qDNAmod_detect.cpp
+	$(CC) $(INCLUDES) -o ../bin/qDNAmod_detect qDNAmod_detect.cpp
 clean:
-	rm -rf ../bin/*.o ../bin/seqBMA_pileup ../bin/seqBMA_prior ../bin/seqBMA_detect
+	rm -rf ../bin/*.o ../bin/qDNAmod_pileup ../bin/qDNAmod_prior ../bin/qDNAmod_detect
 
 

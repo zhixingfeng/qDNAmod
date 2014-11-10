@@ -1,6 +1,6 @@
 qDNAmod
 ======
-qDNAmod is a toolkit for quantitative detection DNA modification heterogeneity from SMRT sequencing data.
+qDNAmod is a toolkit for quantitative detection of DNA modification heterogeneity from SMRT sequencing data. 
 
 System
 ======
@@ -17,6 +17,8 @@ Dependencies
 Installation
 ============
 Unzip the downloaded file, enter the directory and type ./install.sh 
+
+Add <the unzipped directory of qDNAmod> to your PATH
 
 Set evironment variable QDNAMODHOME=<the unzipped directory of qDNAmod>
 
@@ -40,7 +42,6 @@ Maintainer
 ==========
 Zhixing Feng
 
-
 Contact
 =======
 zxfeng.thu@gmail.com
@@ -52,7 +53,7 @@ There are 3 steps: pileup reads, learn prior and detect modification proportion.
 
 Step 1: pileup reads. Firstly, we need to pileup reads position by position.
 
-	seqBMA_pileup  [-r <reagent>] [-m <mapQVthreshold>] <cmpH5file> <outdir>
+	qDNAmod_pileup  [-r <reagent>] [-m <mapQVthreshold>] <cmpH5file> <outdir>
 
 	Where:
    		-r <reagent>,  --reagent <reagent>
@@ -69,7 +70,7 @@ Step 1: pileup reads. Firstly, we need to pileup reads position by position.
 
 Step 2: learn prior. To reduce uncertainty of estimation, we need to roughly estimate IPD distribution of modified bases.
 
-	seqBMA_prior  <native pileup dir> <WGA pileup dir> <outdir>
+	qDNAmod_prior  <native pileup dir> <WGA pileup dir> <outdir>
 
 	Where:
 
@@ -84,7 +85,7 @@ Step 2: learn prior. To reduce uncertainty of estimation, we need to roughly est
 
 Step 3: detect modification proportion. Now we fit a Bayesian mixture model using prior estimated in step 2.
 
-	seqBMA_detect <native pileup dir> <WGA pileup dir> <prior dir> <outdir>
+	qDNAmod_detect <native pileup dir> <WGA pileup dir> <prior dir> <outdir>
 
 	Where:
    		<native pileup dir>
@@ -99,7 +100,18 @@ Step 3: detect modification proportion. Now we fit a Bayesian mixture model usin
    		<outdir>
      		(required)  output directory
 
- 
+Output
+======
+	In the <outdir> of qDNAmod_detect, there are .txt files with the names "detect_<chromosome_name>.txt" corresponding to results for <chromosome_name>. 
+In each .txt file, the columns are:
+
+column 1 (locus): genome locus.
+column 2 (strand): strand, 0 means forward, 1 means backward.
+column 3 (prop): estimated modification proportion.
+column 4 (N_1): expectation of number of kinetic variant bases.  
+column 5 (N_0): expectation of number of normal bases. 
+column 6 (avg_n): average number of times each base being sequenced.
+column 7 (cvg_wga): coverage of WGA sample. 
 
 
 

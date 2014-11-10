@@ -179,7 +179,8 @@ detectModPropEB <- function(genomeF.native, genomeF.wga, f1.x = NULL, f1.y = NUL
                                         as.numeric(f1.x), as.numeric(f1.y),  as.integer(is_f1_var), as.integer(max.iter), as.integer(is.EM))
 
         }	
-
+	rl$genome.start.pos <- genomeF.native$genome.start.pos
+        rl$genome.start.neg <- genomeF.native$genome.start.neg
 	rl
 }
 

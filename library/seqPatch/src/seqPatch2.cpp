@@ -1134,16 +1134,6 @@ RcppExport SEXP R_API_write_z_score_to_CSV(SEXP R_z, SEXP R_ref_pos, SEXP R_file
 
 /*------------------- test -----------------------*/
 
-RcppExport SEXP test_f0(SEXP R_x_avg, SEXP R_x_var, SEXP R_x_n)
-{
-	double x_avg = REAL(R_x_avg)[0];
-	double x_var = REAL(R_x_var)[0];	
-	double x_n = REAL(R_x_n)[0];
-	
-	EBmixture EBmixtureObj;
-	return Rcpp::wrap(EBmixtureObj.f0(x_avg, x_var, x_n));
-}
-
 RcppExport SEXP test_f0_log(SEXP R_x_avg, SEXP R_x_var, SEXP R_x_n, SEXP R_mu_0, SEXP R_sigma_0, SEXP R_f1_x, SEXP R_f1_y)
 {
         double x_avg = REAL(R_x_avg)[0];

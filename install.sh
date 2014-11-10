@@ -5,9 +5,8 @@ cd ..
 
 R CMD INSTALL library/Rcpp
 R CMD INSTALL library/locfdr
-Rscript install_Rpackages.R
-#R CMD INSTALL library/weights
 R CMD INSTALL library/seqPatch
 R CMD INSTALL library/pbh5
 R CMD INSTALL library/h5r
+Rscript install_Rpackages.R
 
