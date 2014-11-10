@@ -57,7 +57,7 @@ Step 1: pileup reads. Firstly, we need to pileup reads position by position.
 
 	qDNAmod_pileup  [-r <reagent>] [-m <mapQVthreshold>] <cmpH5file> <outdir>
 
-	Where:
+	where:
    		-r <reagent>,  --reagent <reagent>
      		chemistry used for SMRT sequencing, candidates are: "C2", default is "C2"
 
@@ -74,7 +74,7 @@ Step 2: learn prior. To reduce uncertainty of estimation, we need to roughly est
 
 	qDNAmod_prior  <native pileup dir> <WGA pileup dir> <outdir>
 
-	Where:
+	where:
 
    		<native pileup dir>
      		(required)  native pileup data directory
@@ -89,7 +89,7 @@ Step 3: detect modification proportion. Now we fit a Bayesian mixture model usin
 
 	qDNAmod_detect <native pileup dir> <WGA pileup dir> <prior dir> <outdir>
 
-	Where:
+	where:
    		<native pileup dir>
      		(required)  native pileup data directory
 
