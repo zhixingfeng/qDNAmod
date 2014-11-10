@@ -24,6 +24,8 @@ Set evironment variable QDNAMODHOME=<the unzipped directory of qDNAmod>
 
 (g++ is required for installation)
 
+Make sure your computer can access internet during the installation.
+
 License
 =======
 GPL2
