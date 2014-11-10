@@ -18,9 +18,9 @@ Installation
 ============
 Unzip the downloaded file, enter the directory and type ./install.sh 
 
-Add <the unzipped directory of qDNAmod> to your PATH
+Add (the unzipped directory of qDNAmod)/bin to your PATH
 
-Set evironment variable QDNAMODHOME=<the unzipped directory of qDNAmod>
+Set evironment variable QDNAMODHOME=(the unzipped directory of qDNAmod)
 
 (g++ is required for installation)
 
