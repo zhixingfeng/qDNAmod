@@ -108,12 +108,19 @@ In the <outdir> of qDNAmod_detect, there are .txt files with the names "detect_<
 In each .txt file, the columns are:
 
 column 1 (locus): genome locus.
+
 column 2 (strand): strand, 0 means forward, 1 means backward.
+
 column 3 (prop): estimated modification proportion.
+
 column 4 (N_1): expectation of number of kinetic variant bases.  
+
 column 5 (N_0): expectation of number of normal bases. 
+
 column 6 (avg_n): average number of times each base being sequenced.
+
 column 7 (cvg_wga): coverage of WGA sample. 
+
 
 
 
