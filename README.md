@@ -11,20 +11,16 @@ Dependencies
 1. R from http://www.r-project.org/
 (Add directory containing binary file 'Rscript' to your enviroment variable PATH)
 
-2. HDF5 from http://www.hdfgroup.org/HDF5/release/obtainsrc.html. 
-(Specify enviroment varible HDF5_HOME as the directory of installed HDF5)
 
 Installation
 ============
 Unzip the downloaded file, enter the directory and type ./install.sh 
 
-Add (the unzipped directory of qDNAmod)/bin to your PATH
+source the setenv.sh file in your ~/.bashrc file. For example add the following code in your ~/.bashrc file
 
-Set evironment variable QDNAMODHOME=(the unzipped directory of qDNAmod)
+source (qDNAmod folder)/setenv.sh 
 
-(g++ is required for installation)
-
-Make sure your computer can access internet during the installation.
+where (qDNAmod folder) is the directory where you unzip qDNAmod.
 
 License
 =======

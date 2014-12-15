@@ -17,6 +17,8 @@ make check-install
 # setup environment variables
 echo "export QDNAMODHOME=$CURHOME" > ./setenv.sh
 echo "export LD_LIBRARY_PATH=$CURHOME/library/hdf5/lib:\$LD_LIBRARY_PATH" >> ./setenv.sh
+echo "export PATH=$CURHOME/bin:\$PATH" >> ./setenv.sh
+
 chmod u+x ./setenv.sh
 source ./setenv.sh
 
