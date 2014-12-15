@@ -1,5 +1,5 @@
 SHLIB = hdf5.so
 OBJS = hdf5.o
 
-PKG_CPPFLAGS =  
-PKG_LIBS =   -lhdf5 -lz -lm
+PKG_CPPFLAGS =  -I/home/zxfeng/GitHub/qDNAmod/library/hdf5/include
+PKG_LIBS = -L/home/zxfeng/GitHub/qDNAmod/library/hdf5/lib  -lhdf5 -lz -lm
